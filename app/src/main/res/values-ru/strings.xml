@@ -13,16 +13,6 @@
     <string name="profdesc2">Ultra-conservative profile that lets performance take a hit in order to achieve long-lasting battery life.</string>
     <string name="profdesc3">Need that extra 10 FPS? I gotchu. Identical to performance in most areas other than the unlocked Graphics performance</string>
 
-    <!-- Profile Loader -->
-    <string name="aboutLoader">Вау!</string>
-    <string name="loaderDesc">Looks like you\'ve found the hidden EXKM Profile loader! While profile loading was originally planned to be a premium feature, I\'ve decided to include it as an easter egg. Others may be hidden in Spectrum, so happy hunting!</string>
-    <string name="cancelText">Отмена</string>
-    <string name="confirmText">ОК</string>
-    <string name="profileConfirm">Вы уверены, что хотите загрузить этот файл?</string>
-    <string name="fileSelect">Выбрать файл</string>
-    <string name="bootText">Применять профиль при загрузке</string>
-    <string name="profileMenu">Загрузчик профилей</string>
-
     <!-- Profile Tile -->
     <string name="profileTile">Профиль</string>
 </resources>

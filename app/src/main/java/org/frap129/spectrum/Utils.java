@@ -27,11 +27,6 @@ class Utils {
         return !support.isEmpty();
     }
 
-    // Method to check if the device is rooted
-    public static boolean checkSU() {
-        return Shell.SU.available();
-    }
-
     // Method that converts List<String> to String
     public static String listToString(List<String> list) {
         StringBuilder Builder = new StringBuilder();
@@ -56,7 +51,7 @@ class Utils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Shell.SU.run(String.format("setprop %s %s", profileProp, profile));
+                Shell.SH.run(String.format("setprop %s %s", profileProp, profile));
             }
         }).start();
     }

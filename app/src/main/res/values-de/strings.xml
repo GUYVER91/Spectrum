@@ -13,16 +13,6 @@
     <string name="profdesc2">Sehr energiesparendes Profil, bei dem die Leistung komplett in den Hintergrund gestellt wird um den Akku möglichst lange am Leben zu erhalten.</string>
     <string name="profdesc3">Zusätzliche 10 FPS nötig? Erwischt! Dieses Profil entfernt sämtliche Limitierungen für eine perfekte Grafik-Leistung.</string>
 
-    <!-- Profile Loader -->
-    <string name="aboutLoader">Hoppla!</string>
-    <string name="loaderDesc">Sieht aus als hättest du den versteckten EXKM Profil-Loader gefunden! Dieser war erst als Premium-Funktion geplant, ist aber nun eines von vielen Easter-Egg\'s. Fröhliches Weitersuchen!</string>
-    <string name="cancelText">Abbrechen</string>
-    <string name="confirmText">OK</string>
-    <string name="profileConfirm">Sicher, dass Sie diese Datei laden wollen?</string>
-    <string name="fileSelect">Datei auswählen</string>
-    <string name="bootText">Profil beim Start anwenden</string>
-    <string name="profileMenu">Profile-Loader</string>
-
     <!-- Profile Tile -->
     <string name="profileTile">Profile</string>
 </resources>

@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +36,8 @@ import static org.frap129.spectrum.Utils.setProfile;
 public class MainActivity extends AppCompatActivity {
 
     private CardView oldCard;
-    private List<String> shResult = null;
+    private List<String> suResult = null;
+    private int notaneasteregg = 0;
     private static final int PERMISSIONS_REQUEST = 0;
 
     @Override
@@ -69,10 +72,28 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // Ensure root access
+        if (!Utils.checkSU()) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.no_root_detected_dialog_title))
+                    .setMessage(getString(R.string.no_root_detected_dialog_message))
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            finish();
+                        }
+                    })
+                    .show();
+            return;
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
         }
+
 
         String disabledProfiles = Utils.disabledProfiles();
         String[] profilesToDisable = disabledProfiles.split(",");
@@ -105,7 +126,12 @@ public class MainActivity extends AppCompatActivity {
         card0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardClick(card0, 0, balColor);
+            cardClick(card0, 0, balColor);
+                if (notaneasteregg == 1) {
+                    notaneasteregg++;
+                } else {
+                    notaneasteregg = 0;
+                }
             }
         });
 
@@ -113,6 +139,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cardClick(card1, 1, perColor);
+                if (notaneasteregg == 3) {
+                    Intent intent = new Intent(MainActivity.this, ProfileLoaderActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    notaneasteregg = 0;
+                }
             }
         });
 
@@ -120,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cardClick(card2, 2, batColor);
+                if (notaneasteregg == 2) {
+                    notaneasteregg++;
+                } else {
+                    notaneasteregg = 0;
+                }
             }
         });
 
@@ -127,8 +165,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cardClick(card3, 3, gamColor);
+                notaneasteregg = 1;
             }
         });
+
     }
 
     // Method that detects the selected profile on launch
@@ -136,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences profile = this.getSharedPreferences("profile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = profile.edit();
 
-        shResult = Shell.SH.run(String.format("getprop %s", profileProp));
+        suResult = Shell.SU.run(String.format("getprop %s", profileProp));
 
-        if (shResult != null) {
-            String result = listToString(shResult);
+        if (suResult != null) {
+            String result = listToString(suResult);
 
             if (result.contains("0")) {
                 CardView card0 = (CardView) findViewById(R.id.card0);
@@ -185,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
         String balDesc;
         String kernel;
 
-        shResult = Shell.SH.run(String.format("getprop %s", kernelProp));
-        kernel = listToString(shResult);
+        suResult = Shell.SU.run(String.format("getprop %s", kernelProp));
+        kernel = listToString(suResult);
         if (kernel.isEmpty())
             return;
         balDesc = desc0.getText().toString();
@@ -218,6 +258,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        SharedPreferences first = this.getSharedPreferences("firstFind", Context.MODE_PRIVATE);
+        if (!first.getBoolean("firstFind", true)) {
+            getMenuInflater().inflate(R.menu.nav, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.custom_profile:
+                Intent i = new Intent(this, ProfileLoaderActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST: {
@@ -234,10 +294,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            }
-            default:
+            case default:
                 break;
+            }
         }
     }
+
 }
 
